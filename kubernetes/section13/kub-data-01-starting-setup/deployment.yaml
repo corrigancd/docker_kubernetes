@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: story-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: story
+  template:
+    metadata:
+      labels:
+        app: story
+    spec:
+      containers:
+        - name: story
+          image: corrigancd/kub-data-demo:1 # image to use on docker hub
+          env:
+            - name: STORY_FOLDER
+              value: 'story'
+          volumeMounts:
+            - mountPath: /app/story # where the volume should be mounted inside of each container
+              name: story-volume # mounts the volume with the configured name below
+      volumes:
+        - name: story-volume
+          persistentVolumeClaim:
+            claimName: host-pvc
